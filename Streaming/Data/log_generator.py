@@ -16,14 +16,14 @@ from jsonschema import validate, ValidationError
 
 
 class Generator:
-    def __init__(self, conf_dir: str, truncate: bool = False):
-        self.conf_dir = conf_dir.rstrip('/')
+    def __init__(self, conf_file: str, truncate: bool = False):
+        self.conf_file = conf_file
         self.events = []
         self.logger = logging.getLogger()
         self.running = False
         self.reload = True
         self.truncate = truncate
-        self.schema = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), 'schema.yaml')))
+        self.schema = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), conf_file)))
 
     def handle_signal(self, sig: int, _) -> None:
         """
@@ -52,21 +52,21 @@ class Generator:
                 self.events = []
 
                 # Load the configuration files
-                for config_file in Generator.gather_configs(self.conf_dir):
-                    try:
-                        event = threading.Event()
-                        config = Generator.load_config(config_file, self.schema)
-                        # Skip over disabled configurations
-                        if not config['enabled']:
-                            self.logger.info('Skipped: {:s}'.format(config_file))
-                            continue
+                # for config_file in Generator.gather_configs(self.conf_dir):
+                try:
+                    event = threading.Event()
+                    config = Generator.load_config(self.conf_file, self.schema)
+                    # Skip over disabled configurations
+                    if not config['enabled']:
+                        self.logger.info('Skipped: {:s}'.format(self.conf_file))
+                        continue
 
-                        self.logger.info('Loaded:  {:s}'.format(config_file))
-                        threading.Thread(target=self.generate_log_entry, args=(event, config)).start()
-                        self.events.append(event)
-                    except ValidationError as e:
-                        self.logger.critical('Invalid configuration file: {:s}'.format(config_file))
-                        self.logger.critical(e)
+                    self.logger.info('Loaded:  {:s}'.format(self.conf_file))
+                    threading.Thread(target=self.generate_log_entry, args=(event, config)).start()
+                    self.events.append(event)
+                except ValidationError as e:
+                    self.logger.critical('Invalid configuration file: {:s}'.format(self.conf_file))
+                    self.logger.critical(e)
 
     def stop(self) -> None:
         self.running = False
@@ -75,15 +75,6 @@ class Generator:
     def stop_generating(self) -> None:
         for e in self.events:
             e.set()
-
-    @staticmethod
-    def gather_configs(config_dir: str):
-        if not os.path.exists(config_dir):
-            raise FileNotFoundError(f'No such file or directory: {config_dir!r}')
-        elif os.path.isfile(config_dir):
-            return [config_dir]
-        else:
-            return glob.glob(f'{config_dir}/*.yaml')
 
     @staticmethod
     def load_config(config_file: str, schema: dict) -> dict:
@@ -227,7 +218,7 @@ class Generator:
 def main() -> None:
     # Define the command arguments
     parser = argparse.ArgumentParser(description='Generate log events')
-    parser.add_argument('config_dir', metavar='/path/to/config', type=str, help='Path to configuration directory or file')
+    parser.add_argument('config_file', metavar='/path/to/config.yaml', type=str, help='Path to configuration file')
     parser.add_argument('--level', '-l', default=logging.getLevelName(logging.INFO), help='Logging level')
     parser.add_argument('--truncate', '-t', action='store_true', help='Truncate the log files on start')
     args = parser.parse_args()
@@ -238,7 +229,7 @@ def main() -> None:
     logger = logging.getLogger()
 
     # Create the generator
-    generator = Generator(args.config_dir, args.truncate)
+    generator = Generator(args.config_file, args.truncate)
     generator.logger = logger
 
     # Specify the signal handler
