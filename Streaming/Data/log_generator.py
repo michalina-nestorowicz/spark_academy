@@ -166,46 +166,20 @@ class Generator:
         else:
             return None
 
-    # def generate_log_entry(self, event: threading.Event, config: dict) -> None:
-    #     # Create the directory if not there
-    #     if not os.path.exists(os.path.dirname(config['file'])):
-    #         os.makedirs(os.path.dirname(config['file']))
-
-    #     # Truncate the log file
-    #     if self.truncate:
-    #         with open(config['file'], 'w') as log_file:
-    #             log_file.truncate()
-    #     else:
-    #         with open(config['file'], 'a'):
-    #             os.utime(config['file'], None)
-    #     time.sleep(0)
-
-    #     while not event.wait(config['frequency'].total_seconds()):
-    #         self.logger.info('Writing %4d logs for "%s" (%s)' % (config['amount'], config['name'], config['file']))
-    #         for ts in self.get_timestamps(config, datetime.datetime.utcnow()):
-    #             config['timestamp'] = ts
-    #             values = {field: self.next_value(config, field) for field in config['fields']}
-    #             log_entry = config['format'].format(**values)
-    #             with open(config['file'], 'a') as log_file:
-    #                 log_file.write(log_entry + '\n')
 
     def generate_log_entry(self, event: threading.Event, config: dict) -> None:
+        # Truncate directory
+        if self.truncate:
+            shutil.rmtree(config['file'])
+
         # Create file directory
         if not os.path.exists(config['file']):
             os.makedirs(config['file'])
 
-        # Truncate directory
-        if self.truncate:
-            for root, dirs, files in os.walk(os.path(config['file'])):
-                for f in files:
-                    os.unlink(os.path.join(root, f))
-                for d in dirs:
-                    shutil.rmtree(os.path.join(root, d))
-
         counter = 1
         while not event.wait(config['frequency'].total_seconds()):
             self.logger.info('Writing %4d logs for "%s" (%s)' % (config['amount'], config['name'], config['file']))
-            for ts in self.get_timestamps(config, datetime.datetime.utcnow()):
+            for ts in self.get_timestamps(config, datetime.datetime.now()):
                 config['timestamp'] = ts
                 values = {field: self.next_value(config, field) for field in config['fields']}
                 log = config['format'].format(**values)
