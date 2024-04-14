@@ -1,6 +1,6 @@
 # Spotify Streaming application setup
 
-For the final exercise, we will create recomendations app based on most currently played tracks.
+For the final exercise, we will create recomendations app based on recently played tracks.
 Luckily for us, Spotify has free [web API](https://developer.spotify.com/) for developers.
 
 ## Setup
@@ -44,6 +44,7 @@ npm install
     * line 140 -> change scope to 'user-read-currently-playing'
 
 ![index.html](picture/html.png)
+
 4. Run app
 
 ```bash
