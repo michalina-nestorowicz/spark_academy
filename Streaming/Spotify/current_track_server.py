@@ -15,8 +15,13 @@ PERIOD_IN_S = 5
 def get_spotify_data(access_token: str):
     header = {"Authorization": f"Bearer {access_token}"}
     response = requests.get("https://api.spotify.com/v1/me/player/currently-playing", headers=header)
-    return json.dumps(response.json())
+    return response.json()
 
+
+
+def mock_data() -> bytes:
+    data = "ABC123\n"
+    return data.encode()
 
 
 def send_to_socket(access_token: str, host: str, port: int) -> None:
@@ -29,7 +34,9 @@ def send_to_socket(access_token: str, host: str, port: int) -> None:
         with conn:
             print('Connected by', addr)
             while True:
-                data = get_spotify_data(access_token)
+                # data = mock_data()
+                data_json = get_spotify_data(access_token)
+                data = json.dumps(data_json) + '\n'
                 print(data)
                 conn.sendall(data.encode())
                 time.sleep(4)
