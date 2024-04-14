@@ -4,7 +4,7 @@ import time
 import json
 import threading
 
-TOKEN = 'BQCSLd4XisBy431Ay7-7Fu-icJdIuoI5d5DEpqFeiFrll7cHiqdEMakZ5AN7Z2QoPAp-M-6ykr8UmNu8SOd4-387u7NViiwuqLlrARfMzSeWPKht6jYhHcir9zQ-AIgabaiuTy4lptgYloIUj8ylkAo3f44nmdON_zrrC-9H8HNHSVHtdlZFJA'
+TOKEN = 'BQBvdtRG58Vrdy4_kvXXVndG64ULK7rRLUq5ZzFMkt5rG2sXXOIHx89Y9qtC6yf9WvVT2_hPjCTzsp3-HArGbt_awIPbiD22SleJBDiWZpU2sC6NLIFRPB-mFgOmBkQKxNZihC2oDriQYwYYEGqyq5n2ni-SBmYq_-Hzjt45QzKig8PVnRAPkw'
 # Host and port to listen on
 HOST = "127.0.0.1"
 PORT = 65432
