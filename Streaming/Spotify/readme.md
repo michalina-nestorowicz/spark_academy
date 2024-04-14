@@ -44,6 +44,7 @@ npm install
     * line 140 -> change scope to 'user-read-currently-playing'
 
 ![index.html](picture/html.png)
+
 4. Run app
 
 ```bash
