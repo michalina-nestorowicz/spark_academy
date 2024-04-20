@@ -19,11 +19,6 @@ def get_spotify_data(access_token: str):
 
 
 
-def mock_data() -> bytes:
-    data = "ABC123\n"
-    return data.encode()
-
-
 def send_to_socket(access_token: str, host: str, port: int) -> None:
     # Create a socket object
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
