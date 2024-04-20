@@ -1,3 +1,6 @@
 .venv
 node_modules/
-*log.txt`
+*log.txt
+metastore_db/
+warehouse/
+*derby.log
