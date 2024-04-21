@@ -1,10 +1,11 @@
 import socket
 import time
 from datetime import datetime
+import random
 
 host, port = ('127.0.0.1', 65432)
 
-print("Starting server")
+print("GLUCOSPARK: Starting glucose level measurements")
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((host, port))
     s.listen()
@@ -12,6 +13,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     with conn:
         print('Connected by', addr)
         while True:
-            conn.sendall((str(datetime.now()) + ",120,ABCD123\n").encode())
-            conn.sendall((str(datetime.now()) + ",-3,ABCD123\n").encode())
+            glucose_reading = random.randint(100, 125)
+            conn.sendall((str(datetime.now()) + f",{glucose_reading},mg\\dL,GS001").encode())
+            conn.sendall((str(datetime.now()) + ",-3,mg\\dL,GS001").encode()) 
             time.sleep(4)
