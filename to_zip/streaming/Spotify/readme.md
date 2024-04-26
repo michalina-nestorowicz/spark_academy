@@ -43,7 +43,7 @@ npm install
     * line 135 -> change to youe redirect_uri, in this example use `http://localhost:8888/`
     * line 140 -> change scope to 'user-read-currently-playing'
 
-![index.html](../picture/html.png)
+![index.html](./picture/html.png)
 
 4. Run app
 
@@ -53,7 +53,7 @@ npm start
 
 5. Open `http://localhost:8888` in a browser and log in
 6. After successfull login, copy `access_token` parameter from page url
-![login](../picture//login_success.png)
+![login](./picture//login_success.png)
 
 ### Check if request works
 
@@ -63,4 +63,4 @@ To check if generated token is able to request currently played track data, go t
 curl --request GET --url https://api.spotify.com/v1/me/player/currently-playing --header 'Authorization: Bearer <generated_token>'
 ```
 
-![request](../picture/request_success.png)
+![request](./picture/request_success.png)
