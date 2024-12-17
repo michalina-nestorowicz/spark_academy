@@ -14,6 +14,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print('Connected by', addr)
         while True:
             glucose_reading = random.randint(100, 125)
-            conn.sendall((str(datetime.now()) + f",{glucose_reading},mg\\dL,GS001").encode())
-            conn.sendall((str(datetime.now()) + ",-3,mg\\dL,GS001").encode()) 
+            conn.sendall((str(datetime.now()) + f",{glucose_reading},mg\\dL,GS001\n").encode())
+            conn.sendall((str(datetime.now()) + ",-3,mg\\dL,GS001\n").encode()) 
             time.sleep(4)
